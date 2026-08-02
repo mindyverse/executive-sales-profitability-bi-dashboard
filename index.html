@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Executive Sales & Estimated Margin BI Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #fbf8fa;
+      --card: rgba(255, 255, 255, 0.86);
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --soft-muted: #8b7d86;
+      --line: rgba(225, 205, 215, 0.86);
+      --rose: #e86f9e;
+      --rose-deep: #c94f7d;
+      --lavender: #8f83e8;
+      --shadow: 0 24px 70px rgba(70, 40, 55, 0.10);
+      --small-shadow: 0 14px 35px rgba(70, 40, 55, 0.08);
+      --radius-xl: 42px;
+      --radius-lg: 34px;
+      --radius-md: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(232, 111, 158, 0.16), transparent 30%),
+        radial-gradient(circle at 88% 10%, rgba(255, 220, 235, 0.55), transparent 32%),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 45%, #fff7fa 100%);
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 34%, rgba(232, 111, 158, 0.07), transparent 24%),
+        radial-gradient(circle at 82% 76%, rgba(143, 131, 232, 0.07), transparent 26%);
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .container {
+      width: min(1180px, 92%);
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 24px 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a,
+    .button {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 11px 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 650;
+      backdrop-filter: blur(16px);
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .nav-links a:hover,
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--small-shadow);
+      border-color: rgba(232, 111, 158, 0.38);
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 16px 35px rgba(232, 111, 158, 0.24);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    header {
+      padding: 54px 0 38px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 0.94fr 1.06fr;
+      gap: 38px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 14px;
+      margin-bottom: 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(232, 111, 158, 0.28);
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--rose-deep);
+      font-size: 14px;
+      font-weight: 700;
+      backdrop-filter: blur(16px);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 780px;
+      font-size: clamp(44px, 6vw, 78px);
+      line-height: 0.98;
+      letter-spacing: -0.065em;
+    }
+
+    .title-accent {
+      color: var(--rose);
+    }
+
+    .hero-text {
+      max-width: 680px;
+      margin: 24px 0 0;
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .signature {
+      margin-top: 18px;
+      font-family: "Dancing Script", "Segoe Script", cursive;
+      font-size: 31px;
+      line-height: 1.1;
+      color: var(--rose-deep);
+    }
+
+    .metric-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 34px 0 0;
+    }
+
+    .mini-card {
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: var(--small-shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .metric {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      margin-bottom: 2px;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 570px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: visible;
+      isolation: isolate;
+    }
+
+    .hero-visual::before {
+      content: "";
+      position: absolute;
+      width: 88%;
+      height: 70%;
+      left: 50%;
+      top: 42%;
+      transform: translate(-50%, -50%);
+      border-radius: 48px;
+      background:
+        radial-gradient(circle at 22% 18%, rgba(232, 111, 158, 0.16), transparent 36%),
+        radial-gradient(circle at 78% 22%, rgba(143, 131, 232, 0.13), transparent 36%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.34), rgba(255, 246, 250, 0.16));
+      filter: blur(6px);
+      z-index: -2;
+    }
+
+    .hero-visual::after {
+      content: "";
+      position: absolute;
+      width: 70%;
+      height: 22%;
+      left: 50%;
+      bottom: 58px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: rgba(70, 40, 55, 0.07);
+      filter: blur(32px);
+      z-index: -3;
+    }
+
+    .hero-visual img {
+      width: min(124%, 840px);
+      max-height: 610px;
+      object-fit: contain;
+      display: block;
+      transform: translate(18px, -58px);
+      filter: drop-shadow(0 30px 42px rgba(70, 40, 55, 0.10));
+    }
+
+    section {
+      padding: 58px 0;
+    }
+
+    .section-kicker {
+      color: var(--rose-deep);
+      font-weight: 760;
+      font-size: 14px;
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: clamp(32px, 4vw, 48px);
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+      font-weight: 760;
+    }
+
+    .section-subtitle {
+      max-width: 790px;
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: var(--card);
+      box-shadow: var(--small-shadow);
+      padding: 26px;
+      backdrop-filter: blur(16px);
+    }
+
+    .soft-panel {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.93), rgba(255, 244, 249, 0.78));
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 4vw, 42px);
+    }
+
+    .journey-card {
+      min-height: 190px;
+    }
+
+    .journey-number {
+      color: var(--rose);
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .journey-card h3,
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+    }
+
+    .journey-card p,
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .tag {
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(232, 111, 158, 0.28);
+      background: rgba(255, 255, 255, 0.74);
+      color: var(--soft-muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .dashboard-stack {
+      display: grid;
+      gap: 34px;
+      margin-top: 30px;
+    }
+
+    .screenshot-card {
+      padding: clamp(16px, 2.2vw, 24px);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.93), rgba(255, 248, 251, 0.83));
+      box-shadow: var(--shadow);
+    }
+
+    .screenshot-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    .screenshot-number {
+      color: var(--rose);
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .screenshot-card h3 {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 30px);
+      letter-spacing: -0.035em;
+      line-height: 1.14;
+    }
+
+    .screenshot-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .screenshot-frame {
+      margin-top: 18px;
+      padding: 10px;
+      border-radius: 26px;
+      border: 1px solid rgba(225, 205, 215, 0.75);
+      background: rgba(255, 255, 255, 0.75);
+    }
+
+    .screenshot-frame img {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      border: 1px solid rgba(225, 205, 215, 0.75);
+      background: #ffffff;
+    }
+
+    .list {
+      display: grid;
+      gap: 13px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: var(--muted);
+    }
+
+    .list li::before {
+      content: "";
+      flex: 0 0 8px;
+      width: 8px;
+      height: 8px;
+      margin-top: 9px;
+      border-radius: 50%;
+      background: var(--rose);
+      box-shadow: 0 0 0 5px rgba(232, 111, 158, 0.12);
+    }
+
+    .methodology {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .methodology .card {
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .closing {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .closing p {
+      color: var(--muted);
+      font-size: 17px;
+      margin: 0 auto;
+    }
+
+    footer {
+      padding: 36px 0 64px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-signature {
+      margin-top: 8px;
+      font-family: "Dancing Script", "Segoe Script", cursive;
+      font-size: 34px;
+      color: var(--rose-deep);
+      line-height: 1.1;
+    }
+
+    @media (max-width: 1040px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 520px;
+      }
+
+      .hero-visual img {
+        width: min(108%, 740px);
+        transform: translateY(-32px);
+      }
+
+      .hero-visual::before {
+        top: 45%;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .methodology,
+      .grid.two,
+      .grid.three {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+      }
+
+      .metric-strip {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding-top: 30px;
+      }
+
+      .screenshot-top {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .button-row,
+      .nav-links {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+      }
+
+      .button,
+      .nav-links a {
+        text-align: center;
+      }
+
+      section {
+        padding: 42px 0;
+      }
+
+      .screenshot-card {
+        border-radius: 28px;
+      }
+
+      .hero-visual {
+        min-height: 450px;
+        margin-top: 16px;
+      }
+
+      .hero-visual img {
+        width: 122%;
+        transform: translateY(-22px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <nav class="nav" aria-label="Main navigation">
+      <div class="nav-links">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#questions">Questions</a>
+        <a href="#methodology">Methodology</a>
+      </div>
+    </nav>
+  </div>
+
+  <header>
+    <div class="container hero">
+      <div>
+        <div class="eyebrow">Retail Business Intelligence project</div>
+
+        <h1>
+          Executive Sales &
+          <span class="title-accent">Estimated Margin</span>
+          BI Dashboard
+        </h1>
+
+        <p class="hero-text">
+          I built this project to explore how a grocery retailer could review sales,
+          baskets, stores, product categories, discounts and household behaviour in one place.
+          PostgreSQL and SQL handle the data preparation, while Power BI brings the final report together.
+        </p>
+
+        <div class="signature">by Sanduprabha Rashmindi</div>
+
+        <div class="button-row">
+          <a class="button primary" href="https://github.com/mindyverse/executive-sales-profitability-bi-dashboard" target="_blank" rel="noreferrer">
+            View GitHub Repository
+          </a>
+
+          <a class="button" href="https://github.com/mindyverse/executive-sales-profitability-bi-dashboard/blob/main/docs/portfolio_case_study.md" target="_blank" rel="noreferrer">
+            Read Case Study
+          </a>
+        </div>
+
+        <div class="metric-strip" aria-label="Project highlights">
+          <div class="mini-card">
+            <div class="metric">2.6M</div>
+            <div class="label">Transaction rows analysed</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="metric">6</div>
+            <div class="label">Dashboard pages</div>
+          </div>
+
+          <div class="mini-card">
+            <div class="metric">SQL + BI</div>
+            <div class="label">End-to-end workflow</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-label="Illustration of a data analytics workspace">
+        <img src="images/Hero Image2.png" alt="Illustration of a woman working with data analytics charts" />
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="container">
+        <div class="soft-panel">
+          <div class="section-kicker">Project snapshot</div>
+          <h2 class="section-title">A clean retail BI workflow from raw files to report.</h2>
+          <p class="section-subtitle">
+            The project starts with grocery transaction files, moves through PostgreSQL and SQL checks,
+            and ends with a Power BI dashboard designed for quick business review.
+          </p>
+
+          <div class="grid three">
+            <div class="journey-card card">
+              <div class="journey-number">01</div>
+              <h3>Prepared the data</h3>
+              <p>I loaded the raw files into PostgreSQL and kept the original data separate from the reporting layer.</p>
+            </div>
+
+            <div class="journey-card card">
+              <div class="journey-number">02</div>
+              <h3>Checked the numbers</h3>
+              <p>I checked row counts, joins, missing values, discount fields and the main KPI results before designing the report.</p>
+            </div>
+
+            <div class="journey-card card">
+              <div class="journey-number">03</div>
+              <h3>Designed the dashboard</h3>
+              <p>I built six Power BI pages with a simple layout, clear KPI cards and a soft visual style.</p>
+            </div>
+          </div>
+
+          <div class="tag-row" aria-label="Tools used">
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">SQL</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">DAX</span>
+            <span class="tag">GitHub Pages</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard">
+      <div class="container">
+        <div class="section-kicker">Dashboard preview</div>
+        <h2 class="section-title">The report pages, shown clearly.</h2>
+        <p class="section-subtitle">
+          The Power BI screenshots stay exactly as they are. I changed only the portfolio page layout
+          so each dashboard page has enough space to be viewed properly.
+        </p>
+
+        <div class="dashboard-stack">
+          <article class="screenshot-card">
+            <div class="screenshot-top">
+              <div>
+                <h3>Executive Overview</h3>
+                <p>High-level sales, basket, discount and estimated margin view.</p>
+              </div>
+              <div class="screenshot-number">Page 01</div>
+            </div>
+            <div class="screenshot-frame">
+              <img src="images/dashboard_screenshots/01_executive_overview.png" alt="Executive Overview dashboard screenshot" />
+            </div>
+          </article>
+
+          <article class="screenshot-card">
+            <div class="screenshot-top">
+              <div>
+                <h3>Product and Category Performance</h3>
+                <p>Department, category and product contribution.</p>
+              </div>
+              <div class="screenshot-number">Page 02</div>
+            </div>
+            <div class="screenshot-frame">
+              <img src="images/dashboard_screenshots/02_product_category_performance.png" alt="Product and Category Performance dashboard screenshot" />
+            </div>
+          </article>
+
+          <article class="screenshot-card">
+            <div class="screenshot-top">
+              <div>
+                <h3>Store and Time Performance</h3>
+                <p>Store contribution and retail week movement.</p>
+              </div>
+              <div class="screenshot-number">Page 03</div>
+            </div>
+            <div class="screenshot-frame">
+              <img src="images/dashboard_screenshots/03_store_time_performance.png" alt="Store and Time Performance dashboard screenshot" />
+            </div>
+          </article>
+
+          <article class="screenshot-card">
+            <div class="screenshot-top">
+              <div>
+                <h3>Discount and Promotion Analysis</h3>
+                <p>Discount pressure and products marked for review.</p>
+              </div>
+              <div class="screenshot-number">Page 04</div>
+            </div>
+            <div class="screenshot-frame">
+              <img src="images/dashboard_screenshots/04_discount_promotion_analysis.png" alt="Discount and Promotion Analysis dashboard screenshot" />
+            </div>
+          </article>
+
+          <article class="screenshot-card">
+            <div class="screenshot-top">
+              <div>
+                <h3>Customer and Household Performance</h3>
+                <p>Household value and demographic availability.</p>
+              </div>
+              <div class="screenshot-number">Page 05</div>
+            </div>
+            <div class="screenshot-frame">
+              <img src="images/dashboard_screenshots/05_customer_household_performance.png" alt="Customer and Household Performance dashboard screenshot" />
+            </div>
+          </article>
+
+          <article class="screenshot-card">
+            <div class="screenshot-top">
+              <div>
+                <h3>Data Quality and Methodology</h3>
+                <p>Checks, limitations and estimated margin assumptions.</p>
+              </div>
+              <div class="screenshot-number">Page 06</div>
+            </div>
+            <div class="screenshot-frame">
+              <img src="images/dashboard_screenshots/06_data_quality_methodology.png" alt="Data Quality and Methodology dashboard screenshot" />
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="questions">
+      <div class="container">
+        <div class="grid two">
+          <div class="card">
+            <div class="section-kicker">Business questions</div>
+            <h2 class="section-title">What I wanted to understand.</h2>
+
+            <ul class="list">
+              <li>Which departments and product categories contribute the most sales?</li>
+              <li>Which stores have stronger basket and sales activity?</li>
+              <li>How does performance move across retail weeks?</li>
+              <li>Where is discount pressure highest?</li>
+              <li>Which products may need a closer promotion review?</li>
+              <li>How should household data be interpreted when demographics are incomplete?</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="section-kicker">Build summary</div>
+            <h2 class="section-title">How I put it together.</h2>
+
+            <ul class="list">
+              <li>Loaded the raw grocery files into PostgreSQL.</li>
+              <li>Created raw, reference and analytics schemas.</li>
+              <li>Prepared SQL views for Power BI instead of using only raw CSV files.</li>
+              <li>Built a star-schema-style Power BI model.</li>
+              <li>Created DAX measures for sales, baskets, discounts and estimated margin.</li>
+              <li>Validated the main dashboard numbers against SQL checks.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="methodology">
+      <div class="container">
+        <div class="methodology">
+          <div>
+            <div class="section-kicker">Methodology</div>
+            <h2 class="section-title">Careful wording mattered in this project.</h2>
+            <p class="section-subtitle">
+              I wanted the dashboard to be useful, but also honest about what the source data can and cannot support.
+            </p>
+          </div>
+
+          <div class="grid">
+            <div class="card">
+              <h3>Estimated margin</h3>
+              <p>
+                The dataset includes sales and discounts, but it does not include actual product cost.
+                Because of that, I used documented department-level assumptions to calculate estimated gross margin.
+                It should be read as a comparison measure, not exact accounting profit.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>Household data</h3>
+              <p>
+                Household demographic information is only available for part of the dataset.
+                Missing demographic values were kept as UNKNOWN instead of removing valid sales transactions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container closing">
+        <div class="section-kicker">What I learned</div>
+        <h2 class="section-title">This project helped me connect SQL, Power BI and business thinking.</h2>
+        <p>
+          I practised preparing data, checking quality, building a model, validating measures
+          and presenting the results clearly. The softer page design is only the presentation layer;
+          the main focus is still the analysis and the methodology behind it.
+        </p>
+
+        <div class="button-row" style="justify-content: center;">
+          <a class="button primary" href="https://github.com/mindyverse/executive-sales-profitability-bi-dashboard" target="_blank" rel="noreferrer">
+            Open Repository
+          </a>
+
+          <a class="button" href="https://github.com/mindyverse/executive-sales-profitability-bi-dashboard/blob/main/docs/portfolio_case_study.md" target="_blank" rel="noreferrer">
+            Open Case Study
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      Built by
+      <div class="footer-signature">Sanduprabha Rashmindi</div>
+    </div>
+  </footer>
+</body>
+</html>

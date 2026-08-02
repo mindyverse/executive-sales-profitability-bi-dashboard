@@ -1,0 +1,38 @@
+{
+  "name": "Premium Blue Portfolio Theme",
+  "dataColors": [
+    "#007AFF",
+    "#5AC8FA",
+    "#34C759",
+    "#FF9500",
+    "#AF52DE",
+    "#FF2D55",
+    "#64D2FF",
+    "#8E8E93"
+  ],
+  "background": "#F5F7FB",
+  "foreground": "#1D1D1F",
+  "tableAccent": "#007AFF",
+  "textClasses": {
+    "callout": {
+      "fontFace": "Segoe UI",
+      "fontSize": 28,
+      "color": "#1D1D1F"
+    },
+    "title": {
+      "fontFace": "Segoe UI",
+      "fontSize": 13,
+      "color": "#1D1D1F"
+    },
+    "header": {
+      "fontFace": "Segoe UI",
+      "fontSize": 18,
+      "color": "#1D1D1F"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#6E6E73"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+﻿# Raw source data — keep locally only
+data/raw/*
+!data/raw/.gitkeep
+
+# Large or temporary processed data
+data/processed/*.csv
+data/processed/*.parquet
+data/processed/*.zip
+data/processed/*.xlsx
+
+# Database exports and backups
+*.backup
+*.dump
+*.sql.gz
+
+# Power BI temporary and recovery files
+*.tmp
+*.temp
+*.bak
+
+# Operating-system files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor settings and temporary files
+.vscode/
+*.log
+
+# Credentials and environment files
+.env
+*.env
+credentials.*
+secrets.*
+
+# Local database load scripts with machine-specific paths
+sql/local_*.sql
+
+# Local Power BI working files
+powerbi/*.pbix
+
+exports/*.pdf
+
+README_backup_before_final_polish.md
+Add-Content .gitignore @"
+
+# Local workspace files
+notes/
+docs/_private/
+
+# Local data files
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Local Power BI working files
+powerbi/*.pbix
+
+# Archives and temporary files
+*.zip
+*.7z
+*.rar
+*.tmp
+*.bak
