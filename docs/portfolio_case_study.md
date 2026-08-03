@@ -155,8 +155,8 @@ If I continued this project, I would improve it by:
 
 Live portfolio:
 
-`https://mindyverse.github.io/executive-sales-profitability-bi-dashboard/`
+`https://mindyverse.github.io/executive-sales-estimated-margin-bi-dashboard/`
 
 GitHub repository:
 
-`https://github.com/mindyverse/executive-sales-profitability-bi-dashboard`
+`https://github.com/mindyverse/executive-sales-estimated-margin-bi-dashboard`

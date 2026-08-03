@@ -10,7 +10,7 @@ The dataset does not include product cost, so the margin figures in this project
 
 Live portfolio:
 
-[View the online project page](https://mindyverse.github.io/executive-sales-profitability-bi-dashboard/)
+[View the online project page](https://mindyverse.github.io/executive-sales-estimated-margin-bi-dashboard/)
 
 Detailed case study:
 
@@ -200,7 +200,7 @@ The assumptions and limitations are shown inside the Power BI report and documen
 ## Repository structure
 
 ```text
-executive-sales-profitability-bi-dashboard/
+executive-sales-estimated-margin-bi-dashboard/
 ├── data/
 │   ├── raw/                 # Local only
 │   └── processed/           # Local only
